@@ -35,7 +35,7 @@ fn run(line: &str) -> impl Iterator<Item = Token> + '_ {
     let mut scanner = Scanner::new(line);
     std::iter::from_fn(move || {
         let next_token = scanner.next_token();
-        if next_token.kind == TokenKind::EOF {
+        if next_token.kind != TokenKind::EOF {
             Some(next_token)
         } else {
             None
