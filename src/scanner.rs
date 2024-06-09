@@ -16,7 +16,7 @@ impl<'a> Scanner<'a> {
         Scanner {
             code,
             current_token: Some(Token {
-                kind: TokenType::START
+                kind: TokenType::Start
             }),
             previous_token: None
         }
