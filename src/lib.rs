@@ -3,14 +3,31 @@ use std::io::stdin;
 
 use scanner::Scanner;
 mod scanner;
+mod error_handler;
 
+/// Different types of tokens
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum TokenKind {
-    EOF
+pub enum TokenType {
+    // Single-character tokens.
+    LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE,
+    COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH,EOF,
+    START,
+
+    // One or two character tokens
+    BANG, BANG_EQUAL, EQUAL, EQUAL_EQUAL,
+    GREATER, GREATER_EQUAL,
+    LESS, LESS_EQUAL,
+
+    // Literals
+    IDENTIFIER, STRING, NUMBER,
+
+    // Keywords
+    AND, CLASS, ELSE, FALSE, FUN, FOR, IF, NIL, OR,
+    PRINT, RETURN, SUPER, THIS, TRUE, VAR, WHILE,
 }
 
 pub struct Token {
-    kind: TokenKind
+    kind: TokenType
 }
 
 /// Run the source code file
@@ -35,7 +52,7 @@ fn run(line: &str) -> impl Iterator<Item = Token> + '_ {
     let mut scanner = Scanner::new(line);
     std::iter::from_fn(move || {
         let next_token = scanner.next_token();
-        if next_token.kind != TokenKind::EOF {
+        if next_token.kind != TokenType::EOF {
             Some(next_token)
         } else {
             None
