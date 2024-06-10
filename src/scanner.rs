@@ -1,4 +1,4 @@
-use crate::Token;
+use crate::Token; 
 use crate::TokenType;
 
 /// Code is a reference. Current and previous tokens are returned and therefore not referred.
@@ -27,6 +27,11 @@ impl<'a> Scanner<'a> {
         }
     }
 
+    /// Check if the source code is at an end
+    fn isAtEnd(&mut self) -> bool {
+        self.current_line >= self.code.len() 
+    }
+
     /// Returns an iterator that contains tokens of type `Token`.
     /// Chained token is the EOF token that makes parsing a little easier.
     pub fn scan_tokens(&'a mut self) -> impl Iterator<Item = Token> + 'a {
@@ -34,11 +39,16 @@ impl<'a> Scanner<'a> {
         std::iter::from_fn(move || {
             // This still moves `self` into the closure.
             // Figure out a way around this? `Rc` and `RefCell` might be good candiates to solve this.
-            let next_token = self.next_token();
-            if next_token.kind != TokenType::Eof {
-                Some(next_token)
+            if (self.isAtEnd()) {
+                Some(
+                    Token {
+                    kind: TokenType::Eof,
+                    lexeme: String::from(""),
+                    literal: None,
+                    line: current_line,
+                })  
             } else {
-                None
+                Some(self.next_token())
             }
         })
         .chain(std::iter::once(Token {
