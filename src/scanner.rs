@@ -1,3 +1,5 @@
+use std::char;
+
 use crate::Token; 
 use crate::TokenType;
 
@@ -28,7 +30,7 @@ impl<'a> Scanner<'a> {
     }
 
     /// Check if the source code is at an end
-    fn isAtEnd(&mut self) -> bool {
+    fn is_at_end(&mut self) -> bool {
         self.current_line >= self.code.len() 
     }
 
@@ -39,25 +41,94 @@ impl<'a> Scanner<'a> {
         std::iter::from_fn(move || {
             // This still moves `self` into the closure.
             // Figure out a way around this? `Rc` and `RefCell` might be good candiates to solve this.
-            if (self.isAtEnd()) {
+            if (self.is_at_end()) {
                 Some(
                     Token {
-                    kind: TokenType::Eof,
-                    lexeme: String::from(""),
-                    literal: None,
-                    line: current_line,
-                })  
+                        kind: TokenType::Eof,
+                        lexeme: String::from(""),
+                        literal: None,
+                        line: current_line,
+                    })  
             } else {
                 Some(self.next_token())
             }
         })
-        .chain(std::iter::once(Token {
-            kind: TokenType::Eof,
-            lexeme: String::from(""),
-            literal: None,
-            line: current_line,
-        }))
+            .chain(std::iter::once(Token {
+                kind: TokenType::Eof,
+                lexeme: String::from(""),
+                literal: None,
+                line: current_line,
+            }))
     }
+
+    /// Scans individual characters and returns a token
+    fn scan_individual_token(character: &char, line: usize) -> Option<Token> {
+        match character {
+            '(' => Some(Token {
+                kind: TokenType::LeftParen,
+                lexeme: String::from("("),
+                line,
+                literal: None,
+            }),
+            ')' => Some(Token {
+                kind: TokenType::RightParen,
+                lexeme: String::from(")"),
+                line,
+                literal: None
+            }),
+            '{' => Some(Token {
+                kind: TokenType::LeftBrace,
+                lexeme: String::from("{"),
+                line,
+                literal: None
+            }),
+            '}' => Some(Token {
+                kind: TokenType::RightBrace,
+                lexeme: String::from("}"),
+                line,
+                literal: None
+            }),
+            ',' => Some(Token {
+                kind: TokenType::Comma,
+                lexeme: String::from(","),
+                line,
+                literal: None
+            }),
+            '.' => Some(Token {
+                kind: TokenType::Dot,
+                lexeme: String::from("."),
+                line,
+                literal: None
+            }),
+            '-' => Some(Token {
+                kind: TokenType::Minus,
+                lexeme: String::from("-"),
+                line,
+                literal: None
+            }),
+            '+' => Some(Token {
+                kind: TokenType::Plus,
+                lexeme: String::from("+"),
+                line,
+                literal: None
+            }),
+            ';' => Some(Token {
+                kind: TokenType::SemiColon,
+                lexeme: String::from(";"),
+                line,
+                literal: None
+            }),
+            '*' => Some(Token {
+                kind: TokenType::Star,
+                lexeme: String::from("*"),
+                line,
+                literal: None
+            }),
+            _ => None
+        }
+    }
+
+
 
     /// Returns the next token. This is a private function only used by `scan_tokens()` function
     fn next_token(&mut self) -> Token {

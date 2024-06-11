@@ -31,6 +31,7 @@ pub enum TokenType {
     Slash,
     Eof,
     Start,
+    Star,
 
     // One or two character tokens
     Bang,
@@ -79,11 +80,11 @@ pub struct Token {
 }
 
 impl Token {
+    // Displays the token as a string (for debugging purposes)
     pub fn to_string(&self) -> String {
         format!("{:?} {:?} {:?}", self.kind, self.lexeme, self.literal)
     }
 }
-
 /// Run the source code file
 pub fn run_file(file_path: &str) -> impl Iterator<Item = Token> + '_ {
     let content = fs::read_to_string(file_path).expect("Invalid file path");
