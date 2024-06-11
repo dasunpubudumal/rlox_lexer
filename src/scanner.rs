@@ -57,7 +57,7 @@ impl<'a> Scanner<'a> {
                         line: current_line,
                     })  
             } else {
-                Some(self.next_token())
+                Some(self.next_token().unwrap())
             }
         })
             .chain(std::iter::once(Token {
@@ -68,9 +68,10 @@ impl<'a> Scanner<'a> {
             }))
     }
 
-    pub fn advance(&mut self) {
+    pub fn advance(&mut self) -> Option<char> {
+        let token = self.code_chars.nth(self.current_pointer);
         self.current_pointer += 1;
-        self.code_chars.nth(self.current_pointer);
+        token
     }
 
     /// Scans individual characters and returns a token
@@ -143,23 +144,34 @@ impl<'a> Scanner<'a> {
 
 
     /// Returns the next token. This is a private function only used by `scan_tokens()` function
-    fn next_token(&mut self) -> Token {
+    fn next_token(&mut self) -> Option<Token> {
         // scan_individual_token() needs to be invoked here.
-        todo!("Yet to be implemented")
+        let character = self.advance().unwrap();
+        Scanner::scan_individual_token(&character, self.current_line)
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-}
-#[test]
-fn test_scan_individual_token() {
-    // placeholder for this test 
-    let token_wrap = Scanner::scan_individual_token(&'{', 1);
-    let token = token_wrap.unwrap();
-    assert_eq!(token.kind, TokenType::LeftBrace);
-    assert_eq!(token.line, 1);
-    assert_eq!(token.lexeme, String::from("{"));
-    assert!(token.literal.is_none(), "");
+    
+    #[test]
+    fn test_scan_individual_token() {
+        // placeholder for this test 
+        let token_wrap = Scanner::scan_individual_token(&'{', 1);
+        let token = token_wrap.unwrap();
+        assert_eq!(token.kind, TokenType::LeftBrace);
+        assert_eq!(token.line, 1);
+        assert_eq!(token.lexeme, String::from("{"));
+        assert!(token.literal.is_none(), "");
+    }
+
+    #[test]
+    fn test_scan_token() {
+        let mut scanner = Scanner::new(r"({!)");
+        let tokens = scanner.scan_tokens().map(|x| x).collect::<Vec<Token>>();
+        // TODO: Write the test to assert the tokens first. And then, proceed to fix the test.
+    }
+
+
 }
