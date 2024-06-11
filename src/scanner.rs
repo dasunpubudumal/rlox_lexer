@@ -1,4 +1,5 @@
 use std::char;
+use std::str::Chars;
 
 use crate::Token; 
 use crate::TokenType;
@@ -9,6 +10,8 @@ pub struct Scanner<'a> {
     pub current_token: Option<Token>,
     pub previous_token: Option<Token>,
     pub current_line: usize,
+    pub current_pointer: usize,
+    pub code_chars: Chars<'a>,
 }
 
 /// We need to guarantee that the reference `code` we provide into `new()` lives throughout the Scanner instance.
@@ -25,17 +28,21 @@ impl<'a> Scanner<'a> {
                 line: 0,
             }),
             previous_token: None,
-            current_line: 0,
+            current_line: 1,
+            current_pointer: 0,
+            code_chars: code.chars(),
         }
     }
 
     /// Check if the source code is at an end
     fn is_at_end(&mut self) -> bool {
-        self.current_line >= self.code.len() 
+        self.current_pointer >= self.code.len() 
     }
 
     /// Returns an iterator that contains tokens of type `Token`.
     /// Chained token is the EOF token that makes parsing a little easier.
+    /// This is not an associated function, as it does have `self` in it. This needs to be called
+    /// as a method.
     pub fn scan_tokens(&'a mut self) -> impl Iterator<Item = Token> + 'a {
         let current_line = self.current_line;
         std::iter::from_fn(move || {
@@ -59,6 +66,11 @@ impl<'a> Scanner<'a> {
                 literal: None,
                 line: current_line,
             }))
+    }
+
+    pub fn advance(&mut self) {
+        self.current_pointer += 1;
+        self.code_chars.nth(self.current_pointer);
     }
 
     /// Scans individual characters and returns a token
@@ -140,15 +152,15 @@ impl<'a> Scanner<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn test_scan_individual_token() {
-        // placeholder for this test 
-        let token_wrap = Scanner::scan_individual_token(&'{', 1);
-        let token = token_wrap.unwrap();
-        assert_eq!(token.kind, TokenType::LeftBrace);
-        assert_eq!(token.line, 1);
-        assert_eq!(token.lexeme, String::from("{"));
-        assert!(token.literal.is_none(), "");
-    }
+}
+#[test]
+fn test_scan_individual_token() {
+    // placeholder for this test 
+    let token_wrap = Scanner::scan_individual_token(&'{', 1);
+    let token = token_wrap.unwrap();
+    assert_eq!(token.kind, TokenType::LeftBrace);
+    assert_eq!(token.line, 1);
+    assert_eq!(token.lexeme, String::from("{"));
+    assert!(token.literal.is_none(), "");
+}
 }
