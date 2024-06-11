@@ -163,4 +163,3 @@ fn test_scan_individual_token() {
     assert_eq!(token.lexeme, String::from("{"));
     assert!(token.literal.is_none(), "");
 }
-}
