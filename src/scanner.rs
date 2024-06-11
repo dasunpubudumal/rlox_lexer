@@ -41,7 +41,7 @@ impl<'a> Scanner<'a> {
         std::iter::from_fn(move || {
             // This still moves `self` into the closure.
             // Figure out a way around this? `Rc` and `RefCell` might be good candiates to solve this.
-            if (self.is_at_end()) {
+            if self.is_at_end() {
                 Some(
                     Token {
                         kind: TokenType::Eof,
@@ -62,7 +62,7 @@ impl<'a> Scanner<'a> {
     }
 
     /// Scans individual characters and returns a token
-    fn scan_individual_token(character: &char, line: usize) -> Option<Token> {
+    pub fn scan_individual_token(character: &char, line: usize) -> Option<Token> {
         match character {
             '(' => Some(Token {
                 kind: TokenType::LeftParen,
@@ -132,6 +132,23 @@ impl<'a> Scanner<'a> {
 
     /// Returns the next token. This is a private function only used by `scan_tokens()` function
     fn next_token(&mut self) -> Token {
+        // scan_individual_token() needs to be invoked here.
         todo!("Yet to be implemented")
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_scan_individual_token() {
+        // placeholder for this test 
+        let token_wrap = Scanner::scan_individual_token(&'{', 1);
+        let token = token_wrap.unwrap();
+        assert_eq!(token.kind, TokenType::LeftBrace);
+        assert_eq!(token.line, 1);
+        assert_eq!(token.lexeme, String::from("{"));
+        assert!(token.literal.is_none(), "");
     }
 }
