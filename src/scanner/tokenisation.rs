@@ -5,7 +5,7 @@ use super::Scanner;
 impl<'a> Scanner<'a> {
 
     /// Check two-digit operators
-    fn match_char(&'a mut self, expected: char) -> bool {
+    fn match_char(&mut self, expected: char) -> bool {
         if self.is_at_end() {
             return false;
         }
