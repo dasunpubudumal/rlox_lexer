@@ -5,3 +5,4 @@ edition = "2021"
 
 [dependencies]
 human-panic = "2.0.0"
+log = "0.4.21"

@@ -1,6 +1,5 @@
 use std::char;
 use std::str::Chars;
-
 use crate::Token; 
 use crate::TokenType;
 
@@ -10,7 +9,6 @@ pub struct Scanner<'a> {
     pub current_token: Option<Token>,
     pub previous_token: Option<Token>,
     pub current_line: usize,
-    pub current_pointer: usize,
     pub code_chars: Chars<'a>,
 }
 
@@ -29,14 +27,8 @@ impl<'a> Scanner<'a> {
             }),
             previous_token: None,
             current_line: 1,
-            current_pointer: 0,
             code_chars: code.chars(),
         }
-    }
-
-    /// Check if the source code is at an end
-    fn is_at_end(&mut self) -> bool {
-        self.current_pointer >= self.code.len() 
     }
 
     /// Returns an iterator that contains tokens of type `Token`.
@@ -44,38 +36,23 @@ impl<'a> Scanner<'a> {
     /// This is not an associated function, as it does have `self` in it. This needs to be called
     /// as a method.
     pub fn scan_tokens(&'a mut self) -> impl Iterator<Item = Token> + 'a {
-        let current_line = self.current_line;
         std::iter::from_fn(move || {
             // This still moves `self` into the closure.
             // Figure out a way around this? `Rc` and `RefCell` might be good candiates to solve this.
-            if self.is_at_end() {
-                Some(
-                    Token {
-                        kind: TokenType::Eof,
-                        lexeme: String::from(""),
-                        literal: None,
-                        line: current_line,
-                    })  
-            } else {
-                Some(self.next_token().unwrap())
+            match self.advance() {
+                Some(character) => self.scan_individual_token(&character, self.current_line),
+                None => None
             }
         })
-            .chain(std::iter::once(Token {
-                kind: TokenType::Eof,
-                lexeme: String::from(""),
-                literal: None,
-                line: current_line,
-            }))
     }
 
-    pub fn advance(&mut self) -> Option<char> {
-        let token = self.code_chars.nth(self.current_pointer);
-        self.current_pointer += 1;
-        token
+    /// Advances the cursor
+    fn advance(&mut self) -> Option<char> {
+        self.code_chars.next()
     }
 
     /// Scans individual characters and returns a token
-    pub fn scan_individual_token(character: &char, line: usize) -> Option<Token> {
+    pub fn scan_individual_token(&mut self, character: &char, line: usize) -> Option<Token> {
         match character {
             '(' => Some(Token {
                 kind: TokenType::LeftParen,
@@ -141,37 +118,19 @@ impl<'a> Scanner<'a> {
         }
     }
 
-
-
-    /// Returns the next token. This is a private function only used by `scan_tokens()` function
-    fn next_token(&mut self) -> Option<Token> {
-        // scan_individual_token() needs to be invoked here.
-        let character = self.advance().unwrap();
-        Scanner::scan_individual_token(&character, self.current_line)
-    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    
-    #[test]
-    fn test_scan_individual_token() {
-        // placeholder for this test 
-        let token_wrap = Scanner::scan_individual_token(&'{', 1);
-        let token = token_wrap.unwrap();
-        assert_eq!(token.kind, TokenType::LeftBrace);
-        assert_eq!(token.line, 1);
-        assert_eq!(token.lexeme, String::from("{"));
-        assert!(token.literal.is_none(), "");
-    }
 
     #[test]
     fn test_scan_token() {
-        let mut scanner = Scanner::new(r"({!)");
-        let tokens = scanner.scan_tokens().map(|x| x).collect::<Vec<Token>>();
-        // TODO: Write the test to assert the tokens first. And then, proceed to fix the test.
+        let mut scanner = Scanner::new("{)");
+        let tokens = scanner.scan_tokens().collect::<Vec<Token>>();
+        assert!(tokens.get(0).is_some());
+        assert_eq!(tokens.get(0).unwrap().lexeme, String::from("{"));
+        assert_eq!(tokens.get(1).unwrap().lexeme, String::from(")"));
     }
-
 
 }
