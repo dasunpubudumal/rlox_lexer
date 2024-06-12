@@ -1,3 +1,5 @@
+mod tokenisation;
+
 use std::char;
 use std::str::Chars;
 use crate::Token; 
@@ -11,6 +13,7 @@ pub struct Scanner<'a> {
     pub current_line: usize,
     pub current_ptr: usize,
     pub previous_char: Option<char>,
+    pub current_char: Option<char>,
     pub code_chars: Chars<'a>,
 }
 
@@ -31,6 +34,7 @@ impl<'a> Scanner<'a> {
             current_line: 1,
             current_ptr: 0,
             previous_char: None,
+            current_char: None,
             code_chars: code.chars(),
         }
     }
@@ -52,78 +56,9 @@ impl<'a> Scanner<'a> {
         })
     }
 
-    /// Advances the cursor
-    fn advance(&mut self) -> Option<char> {
-        self.code_chars.next()
+    pub fn is_at_end(&'a self) -> bool {
+        return self.current_ptr >= self.code.len()
     }
-
-    /// Scans individual characters and returns a token
-    fn scan_individual_token(&mut self, character: &char, line: usize) -> Option<Token> {
-        match character {
-            '(' => Some(Token {
-                kind: TokenType::LeftParen,
-                lexeme: String::from("("),
-                line,
-                literal: None,
-            }),
-            ')' => Some(Token {
-                kind: TokenType::RightParen,
-                lexeme: String::from(")"),
-                line,
-                literal: None
-            }),
-            '{' => Some(Token {
-                kind: TokenType::LeftBrace,
-                lexeme: String::from("{"),
-                line,
-                literal: None
-            }),
-            '}' => Some(Token {
-                kind: TokenType::RightBrace,
-                lexeme: String::from("}"),
-                line,
-                literal: None
-            }),
-            ',' => Some(Token {
-                kind: TokenType::Comma,
-                lexeme: String::from(","),
-                line,
-                literal: None
-            }),
-            '.' => Some(Token {
-                kind: TokenType::Dot,
-                lexeme: String::from("."),
-                line,
-                literal: None
-            }),
-            '-' => Some(Token {
-                kind: TokenType::Minus,
-                lexeme: String::from("-"),
-                line,
-                literal: None
-            }),
-            '+' => Some(Token {
-                kind: TokenType::Plus,
-                lexeme: String::from("+"),
-                line,
-                literal: None
-            }),
-            ';' => Some(Token {
-                kind: TokenType::SemiColon,
-                lexeme: String::from(";"),
-                line,
-                literal: None
-            }),
-            '*' => Some(Token {
-                kind: TokenType::Star,
-                lexeme: String::from("*"),
-                line,
-                literal: None
-            }),
-            _ => None
-        }
-    }
-
 }
 
 #[cfg(test)]
