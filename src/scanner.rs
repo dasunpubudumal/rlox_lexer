@@ -9,6 +9,8 @@ pub struct Scanner<'a> {
     pub current_token: Option<Token>,
     pub previous_token: Option<Token>,
     pub current_line: usize,
+    pub current_ptr: usize,
+    pub previous_char: Option<char>,
     pub code_chars: Chars<'a>,
 }
 
@@ -27,6 +29,8 @@ impl<'a> Scanner<'a> {
             }),
             previous_token: None,
             current_line: 1,
+            current_ptr: 0,
+            previous_char: None,
             code_chars: code.chars(),
         }
     }
@@ -37,12 +41,14 @@ impl<'a> Scanner<'a> {
     /// as a method.
     pub fn scan_tokens(&'a mut self) -> impl Iterator<Item = Token> + 'a {
         std::iter::from_fn(move || {
-            // This still moves `self` into the closure.
-            // Figure out a way around this? `Rc` and `RefCell` might be good candiates to solve this.
-            match self.advance() {
-                Some(character) => self.scan_individual_token(&character, self.current_line),
+            let current_character = self.code_chars.next();
+            let result = match current_character {
+                Some(character) => self.scan_individual_token(&&character, self.current_line),
                 None => None
-            }
+            };
+            self.current_ptr += 1;
+            self.previous_char = current_character;
+            result
         })
     }
 
