@@ -52,7 +52,7 @@ impl<'a> Scanner<'a> {
     }
 
     /// Scans individual characters and returns a token
-    pub fn scan_individual_token(&mut self, character: &char, line: usize) -> Option<Token> {
+    fn scan_individual_token(&mut self, character: &char, line: usize) -> Option<Token> {
         match character {
             '(' => Some(Token {
                 kind: TokenType::LeftParen,
