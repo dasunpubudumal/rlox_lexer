@@ -1,4 +1,4 @@
-mod tokenisation;
+mod lexer;
 
 use crate::Token;
 use std::char;
