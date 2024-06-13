@@ -68,6 +68,7 @@ pub enum TokenType {
 }
 
 /// Token type for lexical analysis
+#[derive(Debug)]
 pub struct Token {
     // Type of the token. I have used `kind` here as `type` is a reserved word in Rust
     pub kind: TokenType,
