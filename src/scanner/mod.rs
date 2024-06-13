@@ -1,6 +1,5 @@
 mod tokenisation;
 
-use crate::token::TokenType;
 use crate::Token;
 use std::char;
 use std::iter::Peekable;
@@ -9,12 +8,9 @@ use std::str::Chars;
 /// Code is a reference. Current and previous tokens are returned and therefore not referred.
 pub struct Scanner<'a> {
     pub code: &'a str,
-    pub current_token: Option<Token>,
-    pub previous_token: Option<Token>,
     pub current_line: usize,
     pub current_ptr: usize,
     pub previous_char: Option<char>,
-    pub current_char: Option<char>,
     pub code_chars: Peekable<Chars<'a>>,
 }
 
@@ -25,17 +21,9 @@ impl<'a> Scanner<'a> {
     pub fn new(code: &'a str) -> Scanner<'a> {
         Scanner {
             code,
-            current_token: Some(Token {
-                kind: TokenType::Start,
-                lexeme: r"",
-                literal: None,
-                line: 0,
-            }),
-            previous_token: None,
             current_line: 1,
             current_ptr: 0,
             previous_char: None,
-            current_char: None,
             code_chars: code.chars().peekable(),
         }
     }
@@ -66,6 +54,8 @@ impl<'a> Scanner<'a> {
 
 #[cfg(test)]
 mod tests {
+    use crate::token::TokenType;
+
     use super::*;
 
     #[ctor::ctor]
