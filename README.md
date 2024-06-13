@@ -1,5 +1,7 @@
 # rlox_lexer
 
+![workflow](https://github.com/dasunpubudumal/rlox_lexer/actions/workflows/rust.yml/badge.svg)
+
 Lexer writen in Rust for [Lox Language](https://craftinginterpreters.com/).
 
 Currently in WIP.
