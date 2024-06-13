@@ -1,6 +1,6 @@
 use std::fmt::Display;
 use std::io::stdin;
-use std::{fs, vec};
+use std::{fs};
 
 use scanner::Scanner;
 mod error_handler;
