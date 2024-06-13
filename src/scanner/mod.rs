@@ -1,7 +1,7 @@
 mod tokenisation;
 
+use crate::token::TokenType;
 use crate::Token;
-use crate::TokenType;
 use std::char;
 use std::iter::Peekable;
 use std::str::Chars;
@@ -27,7 +27,7 @@ impl<'a> Scanner<'a> {
             code,
             current_token: Some(Token {
                 kind: TokenType::Start,
-                lexeme: String::from(""),
+                lexeme: r"",
                 literal: None,
                 line: 0,
             }),
