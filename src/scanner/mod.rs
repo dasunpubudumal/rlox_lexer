@@ -1,10 +1,10 @@
 mod tokenisation;
 
+use crate::Token;
+use crate::TokenType;
 use std::char;
 use std::iter::Peekable;
 use std::str::Chars;
-use crate::Token; 
-use crate::TokenType;
 
 /// Code is a reference. Current and previous tokens are returned and therefore not referred.
 pub struct Scanner<'a> {
@@ -50,7 +50,7 @@ impl<'a> Scanner<'a> {
             let current_character = self.code_chars.next();
             let result = match current_character {
                 Some(character) => self.scan_individual_token(&character, self.current_line),
-                None => None
+                None => None,
             };
             self.current_ptr += 1;
             self.previous_char = current_character;
@@ -60,7 +60,7 @@ impl<'a> Scanner<'a> {
 
     /// Checks if the cursor is at end
     pub(crate) fn is_at_end(&self) -> bool {
-        return self.current_ptr >= self.code.len()
+        return self.current_ptr >= self.code.len();
     }
 }
 
@@ -99,5 +99,4 @@ mod tests {
         assert_eq!(tokens.first().unwrap().kind, TokenType::Bang);
         assert_eq!(tokens.get(1).unwrap().kind, TokenType::BangEqual);
     }
-
 }

@@ -1,4 +1,3 @@
-
 use crate::{Token, TokenType};
 
 use super::Scanner;
@@ -16,8 +15,8 @@ impl<'a> Scanner<'a> {
                     return true;
                 }
                 false
-            },
-            _ => false
+            }
+            _ => false,
         }
     }
 
@@ -117,7 +116,7 @@ impl<'a> Scanner<'a> {
                         line,
                     })
                 }
-            },
+            }
             '<' => {
                 if self.match_char('=') {
                     Some(Token {
@@ -134,7 +133,7 @@ impl<'a> Scanner<'a> {
                         line,
                     })
                 }
-            },
+            }
             '>' => {
                 if self.match_char('=') {
                     Some(Token {
