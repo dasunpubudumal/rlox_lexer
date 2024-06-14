@@ -123,5 +123,6 @@ mod tests {
         let tokens = scanner.scan_tokens().tokens;
         debug!("Tokens: {:?}", tokens);
         assert_eq!(tokens.get(0).unwrap().kind, TokenType::Slash);
+        assert_eq!(tokens.get(1).unwrap().kind, TokenType::Bang);
     }
 }
