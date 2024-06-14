@@ -1,5 +1,3 @@
-use std::string::ParseError;
-
 use crate::token::{TokenBuilder, TokenType};
 
 use super::Scanner;
