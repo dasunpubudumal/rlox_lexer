@@ -3,6 +3,7 @@ use std::io::stdin;
 
 use scanner::Scanner;
 use token::Token;
+mod constants;
 mod error_handler;
 mod scanner;
 mod token;
@@ -27,5 +28,5 @@ pub fn run_prompt() {
 /// Run either the source code or REPL line
 fn run(line: &str) -> impl Iterator<Item = Token> + '_ {
     let mut scanner = Scanner::new(line);
-    scanner.scan_tokens().collect::<Vec<Token>>().into_iter()
+    scanner.scan_tokens().tokens.into_iter()
 }
