@@ -233,12 +233,7 @@ impl<'a> Scanner<'a> {
             '/' => {
                 // If the next character is '/', the entire line is ignored.
                 if self.match_char('/') {
-                    while self.code_chars.peek().map(|&c| c).unwrap() != NEWLINE
-                        && !self.is_at_end()
-                    {
-                        self.current_ptr += 1;
-                        self.code_chars.next();
-                    }
+                    self.seek_until(NEWLINE);
                 } else {
                     self.tokens.push(
                         TokenBuilder::new()
@@ -249,6 +244,13 @@ impl<'a> Scanner<'a> {
                             .build(),
                     )
                 }
+                Ok(())
+            },
+            ' ' | '\t' | '\r' => {
+                Ok(())
+            },
+            '\n' => {
+                self.current_line += 1;
                 Ok(())
             }
             _ => Err(ParserError {}),

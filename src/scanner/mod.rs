@@ -32,6 +32,21 @@ impl<'a> Scanner<'a> {
         }
     }
 
+    /// Seeks the code string by one character.
+    pub fn seek(&mut self) {
+        self.current_ptr += 1;
+        self.code_chars.next();
+    }
+
+    pub fn seek_until(&mut self, terminal_char: char) {
+        while self.code_chars.peek().map(|&c| c).unwrap() != terminal_char
+        && !self.is_at_end()
+        {
+            self.current_ptr += 1;
+            self.code_chars.next();
+        }
+    }
+
     /// Returns an iterator that contains tokens of type `Token`.
     /// Chained token is the EOF token that makes parsing a little easier.
     /// This is not an associated function, as it does have `self` in it. This needs to be called
