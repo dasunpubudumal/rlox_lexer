@@ -65,6 +65,8 @@ impl<'a> Scanner<'a> {
 
 #[cfg(test)]
 mod tests {
+    use log::debug;
+
     use crate::token::TokenType;
 
     use super::*;
@@ -78,6 +80,7 @@ mod tests {
     fn test_scan_token_for_individual_tokens() {
         let scanner = Scanner::new("{)");
         let tokens = scanner.scan_tokens().tokens;
+        debug!("Tokens: {:?}", tokens);
         assert!(tokens.get(0).is_some());
         assert_eq!(tokens.get(0).unwrap().lexeme, String::from("{"));
         assert_eq!(tokens.get(1).unwrap().lexeme, String::from(")"));
@@ -87,7 +90,7 @@ mod tests {
     fn test_scan_token_for_operators_scenario_1() {
         let scanner = Scanner::new("!=");
         let tokens = scanner.scan_tokens().tokens;
-
+        debug!("Tokens: {:?}", tokens);
         assert_eq!(tokens.len(), 1);
         assert_eq!(tokens.first().unwrap().kind, TokenType::BangEqual);
     }
@@ -96,6 +99,7 @@ mod tests {
     fn test_scan_token_for_operators_scenario_2() {
         let scanner = Scanner::new("!!=");
         let tokens = scanner.scan_tokens().tokens;
+        debug!("Tokens: {:?}", tokens);
         assert_eq!(tokens.len(), 2);
         assert_eq!(tokens.first().unwrap().kind, TokenType::Bang);
         assert_eq!(tokens.get(1).unwrap().kind, TokenType::BangEqual);
@@ -107,6 +111,7 @@ mod tests {
         string.push('\n');
         let scanner = Scanner::new(&string);
         let tokens = scanner.scan_tokens().tokens;
+        debug!("Tokens: {:?}", tokens);
         assert!(tokens.is_empty())
     }
 }
