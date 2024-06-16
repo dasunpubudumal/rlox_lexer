@@ -277,11 +277,11 @@ impl<'a> Scanner<'a> {
                 // 2. Add token to tokens vector
                 self.tokens.push(
                     TokenBuilder::new()
-                    .kind(TokenType::String)
-                    .lexeme(string)
-                    .line(line)
-                    .literal(None)
-                    .build()
+                        .kind(TokenType::String)
+                        .lexeme(string)
+                        .line(line)
+                        .literal(None)
+                        .build(),
                 );
                 Ok(())
             }
