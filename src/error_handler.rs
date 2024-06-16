@@ -12,7 +12,9 @@ fn report(line: u16, message: String) {
 // Now we will be able to write our own errors, defer to an underlying error
 // implementation, or do something in between.
 #[derive(Debug, Clone)]
-pub struct ParserError;
+pub struct ParserError {
+    pub(crate) msg: String
+}
 
 // Generation of an error is completely separate from how it is displayed.
 // There's no need to be concerned about cluttering complex logic with the display style.

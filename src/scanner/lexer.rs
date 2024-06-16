@@ -1,3 +1,5 @@
+use std::vec;
+
 use crate::token::{TokenBuilder, TokenType};
 
 use super::Scanner;
@@ -34,7 +36,7 @@ impl<'a> Scanner<'a> {
                 self.tokens.push(
                     TokenBuilder::new()
                         .kind(TokenType::LeftParen)
-                        .lexeme(r"(")
+                        .lexeme(String::from("("))
                         .line(line)
                         .literal(None)
                         .build(),
@@ -45,7 +47,7 @@ impl<'a> Scanner<'a> {
                 self.tokens.push(
                     TokenBuilder::new()
                         .kind(TokenType::RightParen)
-                        .lexeme(r")")
+                        .lexeme(String::from(")"))
                         .line(line)
                         .literal(None)
                         .build(),
@@ -56,7 +58,7 @@ impl<'a> Scanner<'a> {
                 self.tokens.push(
                     TokenBuilder::new()
                         .kind(TokenType::LeftBrace)
-                        .lexeme(r"{")
+                        .lexeme(String::from("{"))
                         .line(line)
                         .literal(None)
                         .build(),
@@ -67,7 +69,7 @@ impl<'a> Scanner<'a> {
                 self.tokens.push(
                     TokenBuilder::new()
                         .kind(TokenType::RightBrace)
-                        .lexeme(r"}")
+                        .lexeme(String::from("}"))
                         .line(line)
                         .literal(None)
                         .build(),
@@ -78,7 +80,7 @@ impl<'a> Scanner<'a> {
                 self.tokens.push(
                     TokenBuilder::new()
                         .kind(TokenType::Comma)
-                        .lexeme(r",")
+                        .lexeme(String::from(","))
                         .line(line)
                         .literal(None)
                         .build(),
@@ -89,7 +91,7 @@ impl<'a> Scanner<'a> {
                 self.tokens.push(
                     TokenBuilder::new()
                         .kind(TokenType::Dot)
-                        .lexeme(r".")
+                        .lexeme(String::from("."))
                         .line(line)
                         .literal(None)
                         .build(),
@@ -100,7 +102,7 @@ impl<'a> Scanner<'a> {
                 self.tokens.push(
                     TokenBuilder::new()
                         .kind(TokenType::Minus)
-                        .lexeme(r"-")
+                        .lexeme(String::from("-"))
                         .line(line)
                         .literal(None)
                         .build(),
@@ -111,7 +113,7 @@ impl<'a> Scanner<'a> {
                 self.tokens.push(
                     TokenBuilder::new()
                         .kind(TokenType::Plus)
-                        .lexeme(r"+")
+                        .lexeme(String::from("+"))
                         .line(line)
                         .literal(None)
                         .build(),
@@ -122,7 +124,7 @@ impl<'a> Scanner<'a> {
                 self.tokens.push(
                     TokenBuilder::new()
                         .kind(TokenType::SemiColon)
-                        .lexeme(r";")
+                        .lexeme(String::from(";"))
                         .line(line)
                         .literal(None)
                         .build(),
@@ -133,7 +135,7 @@ impl<'a> Scanner<'a> {
                 self.tokens.push(
                     TokenBuilder::new()
                         .kind(TokenType::Star)
-                        .lexeme(r"*")
+                        .lexeme(String::from("*"))
                         .line(line)
                         .literal(None)
                         .build(),
@@ -145,7 +147,7 @@ impl<'a> Scanner<'a> {
                     self.tokens.push(
                         TokenBuilder::new()
                             .kind(TokenType::BangEqual)
-                            .lexeme(r"!=")
+                            .lexeme(String::from("!="))
                             .line(line)
                             .literal(None)
                             .build(),
@@ -154,7 +156,7 @@ impl<'a> Scanner<'a> {
                     self.tokens.push(
                         TokenBuilder::new()
                             .kind(TokenType::Bang)
-                            .lexeme(r"!")
+                            .lexeme(String::from("!"))
                             .line(line)
                             .literal(None)
                             .build(),
@@ -167,7 +169,7 @@ impl<'a> Scanner<'a> {
                     self.tokens.push(
                         TokenBuilder::new()
                             .kind(TokenType::EqualEqual)
-                            .lexeme(r"==")
+                            .lexeme(String::from("=="))
                             .line(line)
                             .literal(None)
                             .build(),
@@ -176,7 +178,7 @@ impl<'a> Scanner<'a> {
                     self.tokens.push(
                         TokenBuilder::new()
                             .kind(TokenType::Equal)
-                            .lexeme(r"=")
+                            .lexeme(String::from("="))
                             .line(line)
                             .literal(None)
                             .build(),
@@ -189,7 +191,7 @@ impl<'a> Scanner<'a> {
                     self.tokens.push(
                         TokenBuilder::new()
                             .kind(TokenType::LessEqual)
-                            .lexeme(r"<=")
+                            .lexeme(String::from("<="))
                             .line(line)
                             .literal(None)
                             .build(),
@@ -198,7 +200,7 @@ impl<'a> Scanner<'a> {
                     self.tokens.push(
                         TokenBuilder::new()
                             .kind(TokenType::Less)
-                            .lexeme(r"<")
+                            .lexeme(String::from("<"))
                             .line(line)
                             .literal(None)
                             .build(),
@@ -211,7 +213,7 @@ impl<'a> Scanner<'a> {
                     self.tokens.push(
                         TokenBuilder::new()
                             .kind(TokenType::GreaterEqual)
-                            .lexeme(r">=")
+                            .lexeme(String::from(">="))
                             .line(line)
                             .literal(None)
                             .build(),
@@ -220,7 +222,7 @@ impl<'a> Scanner<'a> {
                     self.tokens.push(
                         TokenBuilder::new()
                             .kind(TokenType::Greater)
-                            .lexeme(r">")
+                            .lexeme(String::from(">"))
                             .line(line)
                             .literal(None)
                             .build(),
@@ -236,22 +238,56 @@ impl<'a> Scanner<'a> {
                     self.tokens.push(
                         TokenBuilder::new()
                             .kind(TokenType::Slash)
-                            .lexeme(r"/")
+                            .lexeme(String::from("/"))
                             .line(line)
                             .literal(None)
                             .build(),
                     )
                 }
                 Ok(())
-            },
-            ' ' | '\t' | '\r' => {
-                Ok(())
-            },
+            }
+            ' ' | '\t' | '\r' => Ok(()),
             '\n' => {
                 self.current_line += 1;
                 Ok(())
             }
-            _ => Err(ParserError {}),
+            '"' => {
+                // Iterate until the cursor meets the closing quotes
+                // This loop will terminate when either if 1) closing quotes are met 2) cursor reaches end of code string
+                let mut vector: Vec<char> = vec![];
+                while !self.is_at_end() && self.code_chars.peek().map(|&c| c).unwrap() != '"' {
+                    if self.code_chars.peek().map(|&c| c).unwrap() == '\n' {
+                        self.current_line += 1;
+                    }
+                    self.seek_with_add(&mut vector);
+                }
+
+                // If closing quote is not found before eof,
+                if self.is_at_end() {
+                    return Err(ParserError {
+                        msg: format!("Unterminated string at line: {}", self.current_line),
+                    });
+                }
+
+                // If closing quote is found before eof,
+
+                // TODO
+                // 1. Strip quotation marks
+                let string = String::from_iter(vector.iter());
+                // 2. Add token to tokens vector
+                self.tokens.push(
+                    TokenBuilder::new()
+                    .kind(TokenType::String)
+                    .lexeme(string)
+                    .line(line)
+                    .literal(None)
+                    .build()
+                );
+                Ok(())
+            }
+            _ => Err(ParserError {
+                msg: String::from(""),
+            }),
         }
     }
 }

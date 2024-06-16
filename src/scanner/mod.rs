@@ -38,6 +38,16 @@ impl<'a> Scanner<'a> {
         self.code_chars.next();
     }
 
+    pub fn seek_with_add(&mut self, vector: &mut Vec<char>) {
+        self.current_ptr += 1;
+        match self.code_chars.next() {
+            Some(c) => {
+                (*vector).push(c);
+            }
+            _ => {}
+        }
+    }
+
     /// Seek until a certail terminal_char character.
     pub fn seek_until(&mut self, terminal_char: char) {
         while !self.is_at_end() && self.code_chars.peek().map(|&c| c).unwrap() != terminal_char {

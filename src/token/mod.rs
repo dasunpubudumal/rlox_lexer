@@ -67,7 +67,7 @@ pub struct Token {
     // Type of the token. I have used `kind` here as `type` is a reserved word in Rust
     pub kind: TokenType,
     // For example, in the statement int x = 10;, there would be four lexemes: `"int"`, `"x"`, `"="`, and `"10"`.
-    pub lexeme: &'static str,
+    pub lexeme: String,
     // For many tokens, this would be None, but for literals this needs to be set as its own type (e.g. `String` for strings)
     pub literal: Option<Literal>,
     // Line number of the
@@ -77,7 +77,7 @@ pub struct Token {
 #[derive(Debug)]
 pub struct TokenBuilder {
     pub(crate) kind: TokenType,
-    pub(crate) lexeme: &'static str,
+    pub(crate) lexeme: String,
     pub(crate) literal: Option<Literal>,
     pub(crate) line: usize,
 }
@@ -86,7 +86,7 @@ impl TokenBuilder {
     pub fn new() -> TokenBuilder {
         TokenBuilder {
             kind: TokenType::Eof,
-            lexeme: r"",
+            lexeme: String::from(""),
             literal: None,
             line: 0,
         }
@@ -97,7 +97,7 @@ impl TokenBuilder {
         self
     }
 
-    pub fn lexeme(mut self, lexeme: &'static str) -> Self {
+    pub fn lexeme(mut self, lexeme: String) -> Self {
         self.lexeme = lexeme;
         self
     }
