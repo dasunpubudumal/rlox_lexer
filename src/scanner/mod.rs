@@ -38,12 +38,10 @@ impl<'a> Scanner<'a> {
         self.code_chars.next();
     }
 
+    /// Seek until a certail terminal_char character.
     pub fn seek_until(&mut self, terminal_char: char) {
-        while self.code_chars.peek().map(|&c| c).unwrap() != terminal_char
-        && !self.is_at_end()
-        {
-            self.current_ptr += 1;
-            self.code_chars.next();
+        while !self.is_at_end() && self.code_chars.peek().map(|&c| c).unwrap() != terminal_char {
+            self.seek();
         }
     }
 
@@ -149,5 +147,16 @@ mod tests {
         let tokens = scanner.scan_tokens().tokens;
         debug!("Tokens: {:?}", tokens);
         assert_eq!(tokens.len(), 10);
+    }
+
+    #[test]
+    fn test_scan_for_skipped_tokens() {
+        let mut string = String::from("\t >=");
+        string.push('\n');
+        let scanner = Scanner::new(&string);
+        let tokens = scanner.scan_tokens().tokens;
+        debug!("Tokens: {:?}", tokens);
+        assert_eq!(tokens.len(), 1);
+        assert_eq!(tokens.first().unwrap().kind, TokenType::GreaterEqual);
     }
 }
