@@ -13,7 +13,7 @@ fn report(line: u16, message: String) {
 // implementation, or do something in between.
 #[derive(Debug, Clone)]
 pub struct ParserError {
-    pub(crate) msg: String
+    pub(crate) msg: String,
 }
 
 // Generation of an error is completely separate from how it is displayed.

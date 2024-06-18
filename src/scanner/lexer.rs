@@ -270,15 +270,18 @@ impl<'a> Scanner<'a> {
                             } else {
                                 self.seek_with_add(&mut vector);
                             }
-                        },
-                        _ => break
+                        }
+                        _ => break,
                     }
                 }
 
                 // If closing quote is not found before eof,
                 if self.is_at_end() {
                     return Err(ParserError {
-                        msg: format!("Unterminated string at line: {}, column: {}", self.current_line, self.current_ptr),
+                        msg: format!(
+                            "Unterminated string at line: {}, column: {}",
+                            self.current_line, self.current_ptr
+                        ),
                     });
                 }
 
