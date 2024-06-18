@@ -298,7 +298,10 @@ impl<'a> Scanner<'a> {
                 Ok(())
             }
             _ => Err(ParserError {
-                msg: String::from(""),
+                msg: format!(
+                    "Unrecognized token: {:?} at line {} column {}",
+                    character, self.current_line, self.current_ptr
+                ),
             }),
         }
     }
