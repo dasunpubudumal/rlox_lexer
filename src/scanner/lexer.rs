@@ -264,7 +264,7 @@ impl<'a> Scanner<'a> {
                                 self.code_chars.next();
                                 break;
                             }
-                            if val == '\n' {
+                            if val == NEWLINE {
                                 self.current_line += 1;
                                 break;
                             } else {
