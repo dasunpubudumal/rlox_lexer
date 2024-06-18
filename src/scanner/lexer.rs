@@ -278,7 +278,7 @@ impl<'a> Scanner<'a> {
                 // If closing quote is not found before eof,
                 if self.is_at_end() {
                     return Err(ParserError {
-                        msg: format!("Unterminated string at line: {}", self.current_line),
+                        msg: format!("Unterminated string at line: {}, column: {}", self.current_line, self.current_ptr),
                     });
                 }
 
