@@ -25,6 +25,26 @@ impl<'a> Scanner<'a> {
         }
     }
 
+    /// Checks whether a given character is a digit (numerical digit)
+    fn is_digit(&self, character: &char) -> bool {
+        match character.to_digit(10) {
+            Some(val) => val <= 9,
+            _ => false,
+        }
+    }
+
+    // TODO: https://craftinginterpreters.com/scanning.html#number-literals
+    fn number(&mut self) {
+        loop {
+            match self.code_chars.peek().map(|&c| c) {
+                Some(val) => {
+
+                },
+                _ => {}
+            }
+        }
+    }
+
     /// Scans individual characters and returns a token
     pub fn scan_individual_token(
         &mut self,
@@ -297,12 +317,17 @@ impl<'a> Scanner<'a> {
                 );
                 Ok(())
             }
-            _ => Err(ParserError {
-                msg: format!(
-                    "Unrecognized token: {:?} at line {} column {}",
-                    character, self.current_line, self.current_ptr
-                ),
-            }),
+            _ => {
+                if self.is_digit(character) {
+
+                }
+                Err(ParserError {
+                    msg: format!(
+                        "Unrecognized token: {:?} at line {} column {}",
+                        character, self.current_line, self.current_ptr
+                    ),
+                })
+            },
         }
     }
 }

@@ -38,6 +38,7 @@ impl<'a> Scanner<'a> {
         self.code_chars.next();
     }
 
+    /// Seek with adding the current character to a given vector
     pub fn seek_with_add(&mut self, vector: &mut Vec<char>) {
         self.current_ptr += 1;
         match self.code_chars.next() {
