@@ -247,7 +247,7 @@ impl<'a> Scanner<'a> {
                 Ok(())
             }
             ' ' | '\t' | '\r' => Ok(()),
-            '\n' => {
+            &NEWLINE => {
                 self.current_line += 1;
                 Ok(())
             }
