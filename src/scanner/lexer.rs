@@ -1,5 +1,7 @@
 use std::vec;
 
+use log::debug;
+
 use crate::token::{TokenBuilder, TokenType};
 
 use super::Scanner;
@@ -255,11 +257,24 @@ impl<'a> Scanner<'a> {
                 // Iterate until the cursor meets the closing quotes
                 // This loop will terminate when either if 1) closing quotes are met 2) cursor reaches end of code string
                 let mut vector: Vec<char> = vec![];
-                while !self.is_at_end() && self.code_chars.peek().map(|&c| c).unwrap() != '"' {
-                    if self.code_chars.peek().map(|&c| c).unwrap() == '\n' {
-                        self.current_line += 1;
+
+                loop {
+                    match self.code_chars.peek().map(|&c| c) {
+                        Some(val) => {
+                            if val == '"' {
+                                self.current_ptr += 1;
+                                self.code_chars.next();
+                                break;
+                            }
+                            if val == '\n' {
+                                self.current_line += 1;
+                                break;
+                            } else {
+                                self.seek_with_add(&mut vector);
+                            }
+                        },
+                        _ => break
                     }
-                    self.seek_with_add(&mut vector);
                 }
 
                 // If closing quote is not found before eof,

@@ -1,6 +1,6 @@
 mod lexer;
 
-use log::info;
+use log::{debug, info};
 
 use crate::Token;
 use std::char;
@@ -168,5 +168,16 @@ mod tests {
         debug!("Tokens: {:?}", tokens);
         assert_eq!(tokens.len(), 1);
         assert_eq!(tokens.first().unwrap().kind, TokenType::GreaterEqual);
+    }
+
+    #[test]
+    fn test_string_tokens() {
+        let mut string = String::from("\" Hello World!\"");
+        string.push('\n');
+        let scanner = Scanner::new(&string);
+        let tokens = scanner.scan_tokens().tokens;
+        debug!("Tokens: {:?}", tokens);
+        assert_eq!(tokens.len(), 1);
+        assert_eq!(tokens.first().unwrap().kind, TokenType::String);
     }
 }
