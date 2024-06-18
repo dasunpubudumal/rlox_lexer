@@ -1,7 +1,5 @@
 use std::vec;
 
-use log::debug;
-
 use crate::token::{TokenBuilder, TokenType};
 
 use super::Scanner;
@@ -285,11 +283,7 @@ impl<'a> Scanner<'a> {
                 }
 
                 // If closing quote is found before eof,
-
-                // TODO
-                // 1. Strip quotation marks
                 let string = String::from_iter(vector.iter());
-                // 2. Add token to tokens vector
                 self.tokens.push(
                     TokenBuilder::new()
                         .kind(TokenType::String)
