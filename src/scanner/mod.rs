@@ -90,7 +90,7 @@ impl<'a> Scanner<'a> {
 mod tests {
     use log::debug;
 
-    use crate::token::TokenType;
+    use crate::{constants::NEWLINE, token::TokenType};
 
     use super::*;
 
@@ -131,7 +131,7 @@ mod tests {
     #[test]
     fn test_scan_token_for_comment() {
         let mut string = String::from("// hello world");
-        string.push('\n');
+        string.push(NEWLINE);
         let scanner = Scanner::new(&string);
         let tokens = scanner.scan_tokens().tokens;
         debug!("Tokens: {:?}", tokens);
@@ -141,7 +141,7 @@ mod tests {
     #[test]
     fn test_scan_token_for_slash() {
         let mut string = String::from("/!");
-        string.push('\n');
+        string.push(NEWLINE);
         let scanner = Scanner::new(&string);
         let tokens = scanner.scan_tokens().tokens;
         debug!("Tokens: {:?}", tokens);
@@ -152,7 +152,7 @@ mod tests {
     #[test]
     fn test_scan_token_for_operators() {
         let mut string = String::from("!*+-/=<> <= ==");
-        string.push('\n');
+        string.push(NEWLINE);
         let scanner = Scanner::new(&string);
         let tokens = scanner.scan_tokens().tokens;
         debug!("Tokens: {:?}", tokens);
@@ -162,7 +162,7 @@ mod tests {
     #[test]
     fn test_scan_for_skipped_tokens() {
         let mut string = String::from("\t >=");
-        string.push('\n');
+        string.push(NEWLINE);
         let scanner = Scanner::new(&string);
         let tokens = scanner.scan_tokens().tokens;
         debug!("Tokens: {:?}", tokens);
@@ -173,11 +173,12 @@ mod tests {
     #[test]
     fn test_string_tokens() {
         let mut string = String::from("\" Hello World!\"");
-        string.push('\n');
+        string.push(NEWLINE);
         let scanner = Scanner::new(&string);
         let tokens = scanner.scan_tokens().tokens;
         debug!("Tokens: {:?}", tokens);
         assert_eq!(tokens.len(), 1);
         assert_eq!(tokens.first().unwrap().kind, TokenType::String);
+        assert_eq!(tokens.first().unwrap().lexeme, " Hello World!");
     }
 }
