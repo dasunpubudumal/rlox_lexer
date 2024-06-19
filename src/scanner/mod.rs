@@ -2,6 +2,7 @@ mod lexer;
 
 use log::{debug, info};
 
+use crate::token::LiteralType;
 use crate::Token;
 use std::char;
 use std::iter::Peekable;
@@ -14,7 +15,7 @@ pub struct Scanner<'a> {
     pub current_ptr: usize,
     pub previous_char: Option<char>,
     pub code_chars: Peekable<Chars<'a>>,
-    pub tokens: Vec<Token>,
+    pub tokens: Vec<Token<LiteralType>>,
 }
 
 /// We need to guarantee that the reference `code` we provide into `new()` lives throughout the Scanner instance.
@@ -91,7 +92,10 @@ impl<'a> Scanner<'a> {
 mod tests {
     use log::debug;
 
-    use crate::{constants::NEWLINE, token::TokenType};
+    use crate::{
+        constants::NEWLINE,
+        token::{Literal, TokenType},
+    };
 
     use super::*;
 
@@ -181,5 +185,23 @@ mod tests {
         assert_eq!(tokens.len(), 1);
         assert_eq!(tokens.first().unwrap().kind, TokenType::String);
         assert_eq!(tokens.first().unwrap().lexeme, " Hello World!");
+    }
+
+    #[ignore]
+    #[test]
+    fn test_numbers() {
+        let mut string = String::from("121.32");
+        string.push(NEWLINE);
+        let scanner = Scanner::new(&string);
+        let tokens = scanner.scan_tokens().tokens;
+        debug!("Tokens: {:?}", tokens);
+        assert_eq!(tokens.len(), 1);
+        assert_eq!(tokens.first().unwrap().kind, TokenType::Number);
+        assert_eq!(
+            tokens.first().unwrap().literal.as_ref().unwrap(),
+            &Literal {
+                kind: LiteralType::Float(121.21)
+            }
+        );
     }
 }

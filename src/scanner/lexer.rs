@@ -37,9 +37,7 @@ impl<'a> Scanner<'a> {
     fn number(&mut self) {
         loop {
             match self.code_chars.peek().map(|&c| c) {
-                Some(val) => {
-
-                },
+                Some(val) => {}
                 _ => {}
             }
         }
@@ -318,16 +316,14 @@ impl<'a> Scanner<'a> {
                 Ok(())
             }
             _ => {
-                if self.is_digit(character) {
-
-                }
+                if self.is_digit(character) {}
                 Err(ParserError {
                     msg: format!(
                         "Unrecognized token: {:?} at line {} column {}",
                         character, self.current_line, self.current_ptr
                     ),
                 })
-            },
+            }
         }
     }
 }

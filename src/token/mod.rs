@@ -1,12 +1,21 @@
-use std::fmt::Display;
+use std::fmt::{Debug, Display};
 
-#[derive(Debug)]
-pub struct Literal {}
+#[derive(Debug, PartialEq)]
+pub struct Literal<T> {
+    pub(crate) kind: T,
+}
 
-impl Display for Literal {
+impl<T> Display for Literal<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         todo!()
     }
+}
+
+#[derive(Debug, PartialEq)]
+pub enum LiteralType {
+    String(String),
+    Int(i32),
+    Float(f64),
 }
 
 /// Different types of tokens
@@ -63,27 +72,27 @@ pub enum TokenType {
 
 /// Token type for lexical analysis
 #[derive(Debug)]
-pub struct Token {
+pub struct Token<T: Debug> {
     // Type of the token. I have used `kind` here as `type` is a reserved word in Rust
     pub kind: TokenType,
     // For example, in the statement int x = 10;, there would be four lexemes: `"int"`, `"x"`, `"="`, and `"10"`.
     pub lexeme: String,
     // For many tokens, this would be None, but for literals this needs to be set as its own type (e.g. `String` for strings)
-    pub literal: Option<Literal>,
+    pub literal: Option<Literal<T>>,
     // Line number of the
     pub line: usize,
 }
 
 #[derive(Debug)]
-pub struct TokenBuilder {
+pub struct TokenBuilder<T> {
     pub(crate) kind: TokenType,
     pub(crate) lexeme: String,
-    pub(crate) literal: Option<Literal>,
+    pub(crate) literal: Option<Literal<T>>,
     pub(crate) line: usize,
 }
 
-impl TokenBuilder {
-    pub fn new() -> TokenBuilder {
+impl<T: Debug> TokenBuilder<T> {
+    pub fn new() -> TokenBuilder<T> {
         TokenBuilder {
             kind: TokenType::Eof,
             lexeme: String::from(""),
@@ -102,7 +111,7 @@ impl TokenBuilder {
         self
     }
 
-    pub fn literal(mut self, literal: Option<Literal>) -> Self {
+    pub fn literal(mut self, literal: Option<Literal<T>>) -> Self {
         self.literal = literal;
         self
     }
@@ -112,7 +121,7 @@ impl TokenBuilder {
         self
     }
 
-    pub fn build(self) -> Token {
+    pub fn build(self) -> Token<T> {
         Token {
             kind: self.kind,
             lexeme: self.lexeme,
@@ -122,7 +131,7 @@ impl TokenBuilder {
     }
 }
 
-impl Token {
+impl<T: Debug> Token<T> {
     // Displays the token as a string (for debugging purposes)
     pub fn to_string(&self) -> String {
         format!("{:?} {:?} {:?}", self.kind, self.lexeme, self.literal)
