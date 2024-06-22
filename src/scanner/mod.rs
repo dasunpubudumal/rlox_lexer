@@ -33,6 +33,16 @@ impl<'a> Scanner<'a> {
         }
     }
 
+    /// Second character lookahead for parsing decimal points
+
+    /// Reference: https://craftinginterpreters.com/scanning.html#number-literals
+    pub fn peek_next(&mut self) -> Option<&char> {
+        if self.current_ptr + 1 >= self.code.len() {
+            return Some(&'\0');
+        }
+        self.code_chars.peek()
+    }
+
     /// Seeks the code string by one character.
     pub fn seek(&mut self) {
         self.current_ptr += 1;
@@ -187,10 +197,10 @@ mod tests {
         assert_eq!(tokens.first().unwrap().lexeme, " Hello World!");
     }
 
-    #[ignore]
+    // #[ignore]
     #[test]
     fn test_numbers() {
-        let mut string = String::from("121.32");
+        let mut string = String::from("126.32");
         string.push(NEWLINE);
         let scanner = Scanner::new(&string);
         let tokens = scanner.scan_tokens().tokens;
@@ -200,7 +210,7 @@ mod tests {
         assert_eq!(
             tokens.first().unwrap().literal.as_ref().unwrap(),
             &Literal {
-                kind: LiteralType::Float(121.21)
+                kind: LiteralType::Float(126.32)
             }
         );
     }

@@ -1,6 +1,8 @@
 use std::vec;
 
-use crate::token::{TokenBuilder, TokenType};
+use log::debug;
+
+use crate::token::{Literal, LiteralType, TokenBuilder, TokenType};
 
 use super::Scanner;
 
@@ -26,21 +28,80 @@ impl<'a> Scanner<'a> {
     }
 
     /// Checks whether a given character is a digit (numerical digit)
-    fn is_digit(&self, character: &char) -> bool {
+    pub fn is_digit(&self, character: &char) -> bool {
         match character.to_digit(10) {
             Some(val) => val <= 9,
             _ => false,
         }
     }
 
-    // TODO: https://craftinginterpreters.com/scanning.html#number-literals
-    fn number(&mut self) {
+    pub fn partial_number(&mut self, nvector: &mut Vec<char>) {
         loop {
             match self.code_chars.peek().map(|&c| c) {
-                Some(val) => {}
-                _ => {}
+                Some(val) => {
+                    if self.is_digit(&val) {
+                        self.current_ptr += 1;
+                        match self.code_chars.next() {
+                            Some(nchar) => {
+                                nvector.push(nchar);
+                            }
+                            _ => {}
+                        }
+                    } else {
+                        break;
+                    }
+                }
+                _ => {
+                    break
+                },
             }
         }
+    }
+
+    /// Check numbers
+    /// e.g. 126.32
+    fn number(&mut self, current_char: char) {
+        // while (isDigit(peek())) advance();
+        // 1. Peek the next character
+        // 2. Check whether if it's a digit
+        // 3. If so, continue advancing until the next character is not a character
+        // 4. If we meet a dot, we need to break.
+        let mut nvector: Vec<char> = vec![current_char];
+        self.partial_number(&mut nvector);
+
+        // Look for a fractional part.
+        match self.code_chars.peek().map(|&c| c) {
+            Some(character) => {
+                // Looking for the fractional part
+                if character == '.' {
+                    // Consume the "."
+                    nvector.push(character);
+                    self.seek();
+                    match self.code_chars.peek().map(|&c| c) {
+                        Some(next_char) => {
+                            if self.is_digit(&next_char) {
+                                self.partial_number(&mut nvector);
+                            }
+                        }
+                        _ => {}
+                    }
+                }
+            }
+            _ => {}
+        }
+
+        let string_value = String::from_iter(nvector);
+
+        self.tokens.push(
+            TokenBuilder::<LiteralType>::new()
+                .kind(TokenType::Number)
+                .line(self.current_line)
+                .lexeme(string_value.clone())
+                .literal(Some(Literal {
+                    kind: LiteralType::Float(string_value.parse::<f64>().unwrap()),
+                }))
+                .build(),
+        )
     }
 
     /// Scans individual characters and returns a token
@@ -316,14 +377,42 @@ impl<'a> Scanner<'a> {
                 Ok(())
             }
             _ => {
-                if self.is_digit(character) {}
-                Err(ParserError {
-                    msg: format!(
-                        "Unrecognized token: {:?} at line {} column {}",
-                        character, self.current_line, self.current_ptr
-                    ),
-                })
+                if self.is_digit(character) {
+                    self.number(*character);
+                    Ok(())
+                } else {
+                    Err(ParserError {
+                        msg: format!(
+                            "Unrecognized token: {:?} at line {} column {}",
+                            character, self.current_line, self.current_ptr
+                        ),
+                    })
+                }
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+
+    use super::*;
+
+    #[test]
+    fn test_is_digit() {
+        let string = String::from("1231.12");
+        let scanner = Scanner::new(&string);
+        let truth_value = scanner.is_digit(&'3');
+        assert!(truth_value);
+    }
+
+    #[test]
+    fn test_partial_number() {
+        let string = String::from("126.32");
+        let mut scanner = Scanner::new(&string);
+        let mut resulting_vector: Vec<char> = vec![];
+        scanner.partial_number(&mut resulting_vector);
+        let result = String::from_iter(resulting_vector);
+        assert_eq!(result, "126");
     }
 }

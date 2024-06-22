@@ -11,7 +11,9 @@ mod token;
 /// Run the source code file
 pub fn run_file(file_path: &str) -> impl Iterator<Item = Token<LiteralType>> + '_ {
     let content = fs::read_to_string(file_path).expect("Invalid file path");
-    run(&content).collect::<Vec<Token<LiteralType>>>().into_iter()
+    run(&content)
+        .collect::<Vec<Token<LiteralType>>>()
+        .into_iter()
 }
 
 /// Run REPL input
