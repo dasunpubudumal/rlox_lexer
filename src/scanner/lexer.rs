@@ -104,6 +104,51 @@ impl<'a> Scanner<'a> {
         )
     }
 
+    fn string(&mut self, line: usize) -> Result<(), ParserError> {
+        let mut vector: Vec<char> = vec![];
+    
+        loop {
+            match self.code_chars.peek().map(|&c| c) {
+                Some(val) => {
+                    if val == '"' {
+                        self.current_ptr += 1;
+                        self.code_chars.next();
+                        break;
+                    }
+                    if val == NEWLINE {
+                        self.current_line += 1;
+                        break;
+                    } else {
+                        self.seek_with_add(&mut vector);
+                    }
+                }
+                _ => break,
+            }
+        }
+    
+        // If closing quote is not found before eof,
+        if self.is_at_end() {
+            return Err(ParserError {
+                _msg: format!(
+                    "Unterminated string at line: {}, column: {}",
+                    self.current_line, self.current_ptr
+                ),
+            });
+        }
+    
+        // If closing quote is found before eof,
+        let string = String::from_iter(vector.iter());
+        self.tokens.push(
+            TokenBuilder::new()
+                .kind(TokenType::String)
+                .lexeme(string)
+                .line(line)
+                .literal(None)
+                .build(),
+        );
+        Ok(())
+    }
+
     /// Scans individual characters and returns a token
     pub(crate) fn scan_individual_token(
         &mut self,
@@ -333,48 +378,7 @@ impl<'a> Scanner<'a> {
             '"' => {
                 // Iterate until the cursor meets the closing quotes
                 // This loop will terminate when either if 1) closing quotes are met 2) cursor reaches end of code string
-                let mut vector: Vec<char> = vec![];
-
-                loop {
-                    match self.code_chars.peek().map(|&c| c) {
-                        Some(val) => {
-                            if val == '"' {
-                                self.current_ptr += 1;
-                                self.code_chars.next();
-                                break;
-                            }
-                            if val == NEWLINE {
-                                self.current_line += 1;
-                                break;
-                            } else {
-                                self.seek_with_add(&mut vector);
-                            }
-                        }
-                        _ => break,
-                    }
-                }
-
-                // If closing quote is not found before eof,
-                if self.is_at_end() {
-                    return Err(ParserError {
-                        _msg: format!(
-                            "Unterminated string at line: {}, column: {}",
-                            self.current_line, self.current_ptr
-                        ),
-                    });
-                }
-
-                // If closing quote is found before eof,
-                let string = String::from_iter(vector.iter());
-                self.tokens.push(
-                    TokenBuilder::new()
-                        .kind(TokenType::String)
-                        .lexeme(string)
-                        .line(line)
-                        .literal(None)
-                        .build(),
-                );
-                Ok(())
+                self.string(line)
             }
             _ => {
                 if self.is_digit(character) {
