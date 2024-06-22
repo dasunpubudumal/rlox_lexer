@@ -204,4 +204,14 @@ mod tests {
             }
         );
     }
+
+    #[test]
+    fn test_literal_and_number() {
+        let mut string = String::from("2 + 2.1");
+        string.push(NEWLINE);
+        let scanner = Scanner::new(&string);
+        let tokens = scanner.scan_tokens().tokens;
+        debug!("Tokens: {:?}", tokens);
+        assert_eq!(tokens.len(), 3);
+    }
 }
