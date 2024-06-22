@@ -111,8 +111,7 @@ impl<'a> Scanner<'a> {
             match self.code_chars.peek().map(|&c| c) {
                 Some(val) => {
                     if val == '"' {
-                        self.current_ptr += 1;
-                        self.code_chars.next();
+                        self.seek();
                         break;
                     }
                     if val == NEWLINE {
