@@ -35,6 +35,8 @@ impl<'a> Scanner<'a> {
         }
     }
 
+    /// Checks a partial number value
+    /// e.g. if 126.32 is the number, it checks 126 and 32 separately 
     pub fn partial_number(&mut self, nvector: &mut Vec<char>) {
         loop {
             match self.code_chars.peek().map(|&c| c) {
