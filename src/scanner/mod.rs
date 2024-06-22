@@ -1,6 +1,6 @@
 mod lexer;
 
-use log::{debug, info};
+use log::info;
 
 use crate::token::LiteralType;
 use crate::Token;
@@ -10,20 +10,20 @@ use std::str::Chars;
 
 /// Code is a reference. Current and previous tokens are returned and therefore not referred.
 pub struct Scanner<'a> {
-    pub code: &'a str,
-    pub current_line: usize,
-    pub current_ptr: usize,
-    pub previous_char: Option<char>,
-    pub code_chars: Peekable<Chars<'a>>,
-    pub tokens: Vec<Token<LiteralType>>,
+    pub(crate) code: &'a str,
+    pub(crate) current_line: usize,
+    pub(crate) current_ptr: usize,
+    pub(crate) previous_char: Option<char>,
+    pub(crate) code_chars: Peekable<Chars<'a>>,
+    pub(crate) tokens: Vec<Token<LiteralType>>,
 }
 
 /// We need to guarantee that the reference `code` we provide into `new()` lives throughout the Scanner instance.
 /// Hence, the lifetime `'a`.
 impl<'a> Scanner<'a> {
     /// Creates a new Scanner struct
-    pub fn new(code: &'a str) -> Scanner<'a> {
-        Scanner {
+    pub(crate) fn new(code: &'a str) -> Scanner<'a> {
+        Self {
             code,
             current_line: 1,
             current_ptr: 0,
@@ -33,24 +33,14 @@ impl<'a> Scanner<'a> {
         }
     }
 
-    /// Second character lookahead for parsing decimal points
-
-    /// Reference: https://craftinginterpreters.com/scanning.html#number-literals
-    pub fn peek_next(&mut self) -> Option<&char> {
-        if self.current_ptr + 1 >= self.code.len() {
-            return Some(&'\0');
-        }
-        self.code_chars.peek()
-    }
-
     /// Seeks the code string by one character.
-    pub fn seek(&mut self) {
+    pub(crate) fn seek(&mut self) {
         self.current_ptr += 1;
         self.code_chars.next();
     }
 
     /// Seek with adding the current character to a given vector
-    pub fn seek_with_add(&mut self, vector: &mut Vec<char>) {
+    pub(crate) fn seek_with_add(&mut self, vector: &mut Vec<char>) {
         self.current_ptr += 1;
         match self.code_chars.next() {
             Some(c) => {
@@ -61,7 +51,7 @@ impl<'a> Scanner<'a> {
     }
 
     /// Seek until a certail terminal_char character.
-    pub fn seek_until(&mut self, terminal_char: char) {
+    pub(crate) fn seek_until(&mut self, terminal_char: char) {
         while !self.is_at_end() && self.code_chars.peek().map(|&c| c).unwrap() != terminal_char {
             self.seek();
         }
@@ -72,7 +62,7 @@ impl<'a> Scanner<'a> {
     /// This is not an associated function, as it does have `self` in it. This needs to be called
     /// as a method. scan_tokens() takes in an exclusive reference (i.e., mut self) to the instance of Scanner
     /// because there's no need to invoke any other scanner functions after the invocation of this function.
-    pub fn scan_tokens(mut self) -> Self {
+    pub(crate) fn scan_tokens(mut self) -> Self {
         while !self.is_at_end() {
             let current_character = self.code_chars.next();
             match current_character {

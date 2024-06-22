@@ -6,7 +6,7 @@ pub struct Literal<T> {
 }
 
 impl<T> Display for Literal<T> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, _f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         todo!()
     }
 }
@@ -101,27 +101,27 @@ impl<T: Debug> TokenBuilder<T> {
         }
     }
 
-    pub fn kind(mut self, kind: TokenType) -> Self {
+    pub(crate) fn kind(mut self, kind: TokenType) -> Self {
         self.kind = kind;
         self
     }
 
-    pub fn lexeme(mut self, lexeme: String) -> Self {
+    pub(crate) fn lexeme(mut self, lexeme: String) -> Self {
         self.lexeme = lexeme;
         self
     }
 
-    pub fn literal(mut self, literal: Option<Literal<T>>) -> Self {
+    pub(crate) fn literal(mut self, literal: Option<Literal<T>>) -> Self {
         self.literal = literal;
         self
     }
 
-    pub fn line(mut self, line: usize) -> Self {
+    pub(crate) fn line(mut self, line: usize) -> Self {
         self.line = line;
         self
     }
 
-    pub fn build(self) -> Token<T> {
+    pub(crate) fn build(self) -> Token<T> {
         Token {
             kind: self.kind,
             lexeme: self.lexeme,

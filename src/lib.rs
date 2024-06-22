@@ -29,6 +29,6 @@ pub fn run_prompt() {
 
 /// Run either the source code or REPL line
 fn run(line: &str) -> impl Iterator<Item = Token<LiteralType>> + '_ {
-    let mut scanner = Scanner::new(line);
+    let scanner = Scanner::new(line);
     scanner.scan_tokens().tokens.into_iter()
 }

@@ -1,7 +1,5 @@
 use std::vec;
 
-use log::debug;
-
 use crate::token::{Literal, LiteralType, TokenBuilder, TokenType};
 
 use super::Scanner;
@@ -28,7 +26,7 @@ impl<'a> Scanner<'a> {
     }
 
     /// Checks whether a given character is a digit (numerical digit)
-    pub fn is_digit(&self, character: &char) -> bool {
+    pub(crate) fn is_digit(&self, character: &char) -> bool {
         match character.to_digit(10) {
             Some(val) => val <= 9,
             _ => false,
@@ -37,7 +35,7 @@ impl<'a> Scanner<'a> {
 
     /// Checks a partial number value
     /// e.g. if 126.32 is the number, it checks 126 and 32 separately 
-    pub fn partial_number(&mut self, nvector: &mut Vec<char>) {
+    pub(crate) fn partial_number(&mut self, nvector: &mut Vec<char>) {
         loop {
             match self.code_chars.peek().map(|&c| c) {
                 Some(val) => {
@@ -107,7 +105,7 @@ impl<'a> Scanner<'a> {
     }
 
     /// Scans individual characters and returns a token
-    pub fn scan_individual_token(
+    pub(crate) fn scan_individual_token(
         &mut self,
         character: &char,
         line: usize,
@@ -359,7 +357,7 @@ impl<'a> Scanner<'a> {
                 // If closing quote is not found before eof,
                 if self.is_at_end() {
                     return Err(ParserError {
-                        msg: format!(
+                        _msg: format!(
                             "Unterminated string at line: {}, column: {}",
                             self.current_line, self.current_ptr
                         ),
@@ -384,7 +382,7 @@ impl<'a> Scanner<'a> {
                     Ok(())
                 } else {
                     Err(ParserError {
-                        msg: format!(
+                        _msg: format!(
                             "Unrecognized token: {:?} at line {} column {}",
                             character, self.current_line, self.current_ptr
                         ),

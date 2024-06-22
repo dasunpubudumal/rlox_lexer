@@ -1,9 +1,11 @@
 use std::fmt;
 
-pub fn error(line: u16, message: String) {
+#[warn(dead_code)]
+pub(crate) fn error(line: u16, message: String) {
     report(line, message);
 }
 
+#[warn(dead_code)]
 fn report(line: u16, message: String) {
     println!("Error in line [[{}]]: caused by: [[{}]]", line, message);
 }
@@ -13,7 +15,7 @@ fn report(line: u16, message: String) {
 // implementation, or do something in between.
 #[derive(Debug, Clone)]
 pub struct ParserError {
-    pub(crate) msg: String,
+    pub(crate) _msg: String,
 }
 
 // Generation of an error is completely separate from how it is displayed.
