@@ -91,6 +91,7 @@ impl<'a> Scanner<'a> {
 #[cfg(test)]
 mod tests {
     use log::debug;
+    use rstest::{fixture, rstest};
 
     use crate::{
         constants::NEWLINE,
@@ -119,7 +120,6 @@ mod tests {
         let scanner = Scanner::new("!=");
         let tokens = scanner.scan_tokens().tokens;
         debug!("Tokens: {:?}", tokens);
-        assert_eq!(tokens.len(), 1);
         assert_eq!(tokens.first().unwrap().kind, TokenType::BangEqual);
     }
 
@@ -128,7 +128,6 @@ mod tests {
         let scanner = Scanner::new("!!=");
         let tokens = scanner.scan_tokens().tokens;
         debug!("Tokens: {:?}", tokens);
-        assert_eq!(tokens.len(), 2);
         assert_eq!(tokens.first().unwrap().kind, TokenType::Bang);
         assert_eq!(tokens.get(1).unwrap().kind, TokenType::BangEqual);
     }
@@ -161,7 +160,6 @@ mod tests {
         let scanner = Scanner::new(&string);
         let tokens = scanner.scan_tokens().tokens;
         debug!("Tokens: {:?}", tokens);
-        assert_eq!(tokens.len(), 10);
     }
 
     #[test]
@@ -171,7 +169,6 @@ mod tests {
         let scanner = Scanner::new(&string);
         let tokens = scanner.scan_tokens().tokens;
         debug!("Tokens: {:?}", tokens);
-        assert_eq!(tokens.len(), 1);
         assert_eq!(tokens.first().unwrap().kind, TokenType::GreaterEqual);
     }
 
@@ -182,7 +179,6 @@ mod tests {
         let scanner = Scanner::new(&string);
         let tokens = scanner.scan_tokens().tokens;
         debug!("Tokens: {:?}", tokens);
-        assert_eq!(tokens.len(), 1);
         assert_eq!(tokens.first().unwrap().kind, TokenType::String);
         assert_eq!(tokens.first().unwrap().lexeme, " Hello World!");
     }
@@ -195,7 +191,6 @@ mod tests {
         let scanner = Scanner::new(&string);
         let tokens = scanner.scan_tokens().tokens;
         debug!("Tokens: {:?}", tokens);
-        assert_eq!(tokens.len(), 1);
         assert_eq!(tokens.first().unwrap().kind, TokenType::Number);
         assert_eq!(
             tokens.first().unwrap().literal.as_ref().unwrap(),
@@ -205,13 +200,19 @@ mod tests {
         );
     }
 
-    #[test]
-    fn test_literal_and_number() {
-        let mut string = String::from("2 + 2.1");
-        string.push(NEWLINE);
+    #[rstest]
+    #[case("!*+-/=<> <= ==", 10)]
+    #[case("\t >= ", 1)]
+    #[case("\" Hello World!\"", 1)]
+    #[case("2 + 2.1", 3)]
+    fn test_scan_tokens(#[case] input: &str, #[case] expected_len: usize) {
+        let mut string = String::from(input);
+        string.push('\n');
+
         let scanner = Scanner::new(&string);
-        let tokens = scanner.scan_tokens().tokens;
+        let tokens: Vec<Token<LiteralType>> = scanner.scan_tokens().tokens;
+
         debug!("Tokens: {:?}", tokens);
-        assert_eq!(tokens.len(), 3);
+        assert_eq!(tokens.len(), expected_len);
     }
 }
