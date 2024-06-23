@@ -87,3 +87,44 @@ impl<'a> Scanner<'a> {
         return self.current_ptr >= self.code.len();
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_seek() {
+        let mut scanner = Scanner::new("abc");
+        scanner.seek();
+        assert_eq!(scanner.current_ptr, 1);
+        assert_eq!(scanner.code_chars.peek(), Some(&'b'));
+    }
+
+    #[test]
+    fn test_seek_with_add() {
+        let mut scanner = Scanner::new("abc");
+        let mut vector = Vec::new();
+        scanner.seek_with_add(&mut vector);
+        assert_eq!(vector, vec!['a']);
+        assert_eq!(scanner.current_ptr, 1);
+        assert_eq!(scanner.code_chars.peek(), Some(&'b'));
+    }
+
+    #[test]
+    fn test_seek_until() {
+        let mut scanner = Scanner::new("abcdef");
+        scanner.seek_until('d');
+        // After seeking until 'd', the next character should be 'e', as 'd' is consumed
+        assert_eq!(scanner.current_ptr, 3);
+        assert_eq!(scanner.code_chars.peek(), Some(&'d'));
+    }
+
+    #[test]
+    fn test_is_at_end() {
+        let mut scanner = Scanner::new("a");
+        assert!(!scanner.is_at_end());
+        scanner.seek();
+        // After seeking past the only character, scanner should be at end
+        assert!(scanner.is_at_end());
+    }
+}
