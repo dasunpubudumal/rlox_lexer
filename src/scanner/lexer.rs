@@ -58,6 +58,11 @@ impl<'a> Scanner<'a> {
         }
     }
 
+    /// Check if the character is a alphabetic character
+    pub(crate) fn is_alpha(&self, character: &char) -> bool {
+        character.is_alphabetic()
+    }
+
     /// Check numbers
     /// e.g. 126.32
     fn number(&mut self, current_char: char) {
@@ -399,6 +404,8 @@ impl<'a> Scanner<'a> {
 #[cfg(test)]
 mod tests {
 
+    use rstest::rstest;
+
     use super::*;
 
     #[test]
@@ -418,4 +425,19 @@ mod tests {
         let result = String::from_iter(resulting_vector);
         assert_eq!(result, "126");
     }
+
+    #[rstest]
+    #[case('a', true)]
+    #[case('!', false)]
+    #[case('3', false)]
+    fn test_is_alpha(#[case] input: char, #[case] expected: bool) {
+        let mut string = String::from("test");
+        string.push('\n');
+
+        let scanner = Scanner::new(&string);
+        let result = scanner.is_alpha(&input);
+
+        assert_eq!(result, expected);
+    }
+
 }
