@@ -34,7 +34,7 @@ impl<'a> Scanner<'a> {
     }
 
     /// Checks a partial number value
-    /// e.g. if 126.32 is the number, it checks 126 and 32 separately 
+    /// e.g. if 126.32 is the number, it checks 126 and 32 separately
     pub(crate) fn partial_number(&mut self, nvector: &mut Vec<char>) {
         loop {
             match self.code_chars.peek().map(|&c| c) {
@@ -51,9 +51,7 @@ impl<'a> Scanner<'a> {
                         break;
                     }
                 }
-                _ => {
-                    break
-                },
+                _ => break,
             }
         }
     }
@@ -111,7 +109,7 @@ impl<'a> Scanner<'a> {
 
     fn string(&mut self, line: usize) -> Result<(), ParserError> {
         let mut vector: Vec<char> = vec![];
-    
+
         loop {
             match self.code_chars.peek().map(|&c| c) {
                 Some(val) => {
@@ -129,7 +127,7 @@ impl<'a> Scanner<'a> {
                 _ => break,
             }
         }
-    
+
         // If closing quote is not found before eof,
         if self.is_at_end() {
             return Err(ParserError {
@@ -139,7 +137,7 @@ impl<'a> Scanner<'a> {
                 ),
             });
         }
-    
+
         // If closing quote is found before eof,
         let string = String::from_iter(vector.iter());
         self.tokens.push(
@@ -440,5 +438,4 @@ mod tests {
 
         assert_eq!(result, expected);
     }
-
 }

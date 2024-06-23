@@ -1,8 +1,7 @@
 use log::debug;
 use rstest::{fixture, rstest};
 
-use rlox_lexer::{scanner::Scanner, TokenType, Token, Literal, LiteralType, constants::NEWLINE};
-
+use rlox_lexer::{constants::NEWLINE, scanner::Scanner, Literal, LiteralType, Token, TokenType};
 
 #[ctor::ctor]
 fn init() {

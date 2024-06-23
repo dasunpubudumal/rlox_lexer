@@ -2,7 +2,7 @@ use std::fs;
 use std::io::stdin;
 
 use scanner::Scanner;
-pub use token::{LiteralType, Token, TokenType, Literal};
+pub use token::{Literal, LiteralType, Token, TokenType};
 pub mod constants;
 mod error_handler;
 pub mod scanner;
