@@ -401,6 +401,7 @@ impl<'a> Scanner<'a> {
     }
 }
 
+// Tests here are for testing tests listed in src/scanner/lexer.rs
 #[cfg(test)]
 mod tests {
 

@@ -2,7 +2,7 @@ use std::fmt::{Debug, Display};
 
 #[derive(Debug, PartialEq)]
 pub struct Literal<T> {
-    pub(crate) kind: T,
+    pub kind: T,
 }
 
 impl<T> Display for Literal<T> {

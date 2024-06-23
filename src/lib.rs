@@ -2,11 +2,11 @@ use std::fs;
 use std::io::stdin;
 
 use scanner::Scanner;
-use token::{LiteralType, Token};
-mod constants;
+pub use token::{LiteralType, Token, TokenType, Literal};
+pub mod constants;
 mod error_handler;
-mod scanner;
-mod token;
+pub mod scanner;
+pub mod token;
 
 /// Run the source code file
 pub fn run_file(file_path: &str) -> impl Iterator<Item = Token<LiteralType>> + '_ {
