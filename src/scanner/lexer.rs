@@ -151,6 +151,29 @@ impl<'a> Scanner<'a> {
         Ok(())
     }
 
+    pub(crate) fn identifier(&mut self, line: usize) {
+        loop {
+            match self.code_chars.peek().map(|&c| c) {
+                Some(val) => {
+                    if self.is_alpha(&val) {
+                        self.seek();
+                    } else {
+                        break;
+                    }
+                }
+                _ => {}
+            }
+        }
+        self.tokens.push(
+            TokenBuilder::new()
+                .kind(TokenType::Identifier)
+                .lexeme("".to_string())
+                .line(line)
+                .literal(None)
+                .build(),
+        );
+    }
+
     /// Scans individual characters and returns a token
     pub(crate) fn scan_individual_token(
         &mut self,
@@ -386,7 +409,11 @@ impl<'a> Scanner<'a> {
                 if self.is_digit(character) {
                     self.number(*character);
                     Ok(())
-                } else {
+                } else if (self.is_alpha(&character)) {
+                    self.identifier(line);
+                    Ok(())
+                }
+                else {
                     Err(ParserError {
                         _msg: format!(
                             "Unrecognized token: {:?} at line {} column {}",
