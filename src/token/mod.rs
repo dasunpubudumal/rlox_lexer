@@ -131,9 +131,9 @@ impl<T: Debug> TokenBuilder<T> {
     }
 }
 
-impl<T: Debug> Token<T> {
-    // Displays the token as a string (for debugging purposes)
-    pub fn to_string(&self) -> String {
-        format!("{:?} {:?} {:?}", self.kind, self.lexeme, self.literal)
+// It's possible to implement system traits; in this case it's converting a Token instance into a String
+impl<T: Debug> From<Token<T>> for String {
+    fn from(value: Token<T>) -> Self {
+        format!("{:?} {:?} {:?}", value.kind, value.lexeme, value.literal)
     }
 }
