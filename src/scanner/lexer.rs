@@ -152,11 +152,10 @@ impl<'a> Scanner<'a> {
     }
 
     fn prepare_lexeme_for_id(&self, identifier: String) -> (TokenType, String) {
-        let id_type = match KEYWORDS.get(identifier.as_ref()) {
-            Some(&id_type) => id_type,
-            _ => TokenType::Identifier
-        };
-        (id_type, identifier)
+        let id_type = KEYWORDS
+            .get(identifier.as_ref())
+            .unwrap_or_else(|| &TokenType::Identifier);
+        (*id_type, identifier)
     }
 
     pub(crate) fn identifier(&mut self, line: usize, prev_char: char) {
