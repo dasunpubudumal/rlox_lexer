@@ -1,10 +1,10 @@
 use std::vec;
 
-use crate::token::{Literal, LiteralType, TokenBuilder, TokenType};
+use crate::token::{self, Literal, LiteralType, TokenBuilder, TokenType};
 
 use super::Scanner;
 
-use crate::constants::NEWLINE;
+use crate::constants::{KEYWORDS, NEWLINE};
 use crate::error_handler::ParserError;
 
 impl<'a> Scanner<'a> {
@@ -151,6 +151,14 @@ impl<'a> Scanner<'a> {
         Ok(())
     }
 
+    fn prepare_lexeme_for_id(&self, identifier: String) -> (TokenType, String) {
+        let id_type = match KEYWORDS.get(identifier.as_ref()) {
+            Some(&id_type) => id_type,
+            _ => TokenType::Identifier
+        };
+        (id_type, identifier)
+    }
+
     pub(crate) fn identifier(&mut self, line: usize, prev_char: char) {
         let mut id_vec: Vec<char> = vec![];
         id_vec.push(prev_char);
@@ -167,10 +175,11 @@ impl<'a> Scanner<'a> {
             }
         }
         let string = String::from_iter(id_vec.iter());
+        let (token_type, lexeme) = self.prepare_lexeme_for_id(string);
         self.tokens.push(
             TokenBuilder::new()
-                .kind(TokenType::Identifier)
-                .lexeme(string)
+                .kind(token_type)
+                .lexeme(lexeme.to_string())
                 .line(line)
                 .literal(None)
                 .build(),

@@ -110,7 +110,7 @@ fn test_identifier() {
     let scanner = Scanner::new(&string);
     let tokens = scanner.scan_tokens().tokens;
     debug!("Tokens: {:?}", tokens);
-    assert_eq!(tokens.first().unwrap().kind, TokenType::Identifier);
+    assert_eq!(tokens.first().unwrap().kind, TokenType::For);
     assert_eq!(tokens.first().unwrap().lexeme, "for");
 }
 
