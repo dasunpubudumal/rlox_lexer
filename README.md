@@ -24,3 +24,4 @@ At WIP level:
 ## References
 
 1. [Borrowing Rules for `self`](https://users.rust-lang.org/t/borrowing-rules-about-self/69451/2)
+
