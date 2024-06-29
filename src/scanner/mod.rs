@@ -65,16 +65,13 @@ impl<'a> Scanner<'a> {
     pub fn scan_tokens(mut self) -> Self {
         while !self.is_at_end() {
             let current_character = self.code_chars.next();
-            match current_character {
-                Some(character) => {
-                    match self.scan_individual_token(&character, self.current_line) {
-                        Ok(()) => (),
-                        Err(error) => {
-                            info!("Error: {:?}", error);
-                        }
+            if let Some(character) = current_character {
+                match self.scan_individual_token(&character, self.current_line) {
+                    Ok(()) => (),
+                    Err(error) => {
+                        info!("Error: {:?}", error);
                     }
                 }
-                None => (),
             }
             self.current_ptr += 1;
             self.previous_char = current_character;
@@ -84,7 +81,7 @@ impl<'a> Scanner<'a> {
 
     /// Checks if the cursor is at end
     pub(crate) fn is_at_end(&self) -> bool {
-        return self.current_ptr >= self.code.len();
+        self.current_ptr >= self.code.len()
     }
 }
 

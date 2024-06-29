@@ -1,5 +1,5 @@
 use log::debug;
-use rstest::{fixture, rstest};
+use rstest::rstest;
 
 use rlox_lexer::{constants::NEWLINE, scanner::Scanner, Literal, LiteralType, Token, TokenType};
 
@@ -13,8 +13,8 @@ fn test_scan_token_for_individual_tokens() {
     let scanner = Scanner::new("{)");
     let tokens = scanner.scan_tokens().tokens;
     debug!("Tokens: {:?}", tokens);
-    assert!(tokens.get(0).is_some());
-    assert_eq!(tokens.get(0).unwrap().lexeme, String::from("{"));
+    assert!(tokens.first().is_some());
+    assert_eq!(tokens.first().unwrap().lexeme, String::from("{"));
     assert_eq!(tokens.get(1).unwrap().lexeme, String::from(")"));
 }
 
@@ -52,7 +52,7 @@ fn test_scan_token_for_slash() {
     let scanner = Scanner::new(&string);
     let tokens = scanner.scan_tokens().tokens;
     debug!("Tokens: {:?}", tokens);
-    assert_eq!(tokens.get(0).unwrap().kind, TokenType::Slash);
+    assert_eq!(tokens.first().unwrap().kind, TokenType::Slash);
     assert_eq!(tokens.get(1).unwrap().kind, TokenType::Bang);
 }
 

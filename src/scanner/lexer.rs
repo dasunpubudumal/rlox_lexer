@@ -1,6 +1,6 @@
 use std::vec;
 
-use crate::token::{self, Literal, LiteralType, TokenBuilder, TokenType};
+use crate::token::{Literal, LiteralType, TokenBuilder, TokenType};
 
 use super::Scanner;
 
