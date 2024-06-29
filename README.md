@@ -15,6 +15,12 @@ Currently in WIP.
 RUST_LOG=debug cargo test -- --nocapture
 ```
 
+### Development
+
+At WIP level:
+
+- Each feature needs to be tested in `tests/lexer_test.rs`.
+
 ## References
 
 1. [Borrowing Rules for `self`](https://users.rust-lang.org/t/borrowing-rules-about-self/69451/2)
