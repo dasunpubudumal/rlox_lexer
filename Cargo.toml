@@ -9,3 +9,4 @@ log = "0.4.21"
 env_logger = "0.11.3"
 ctor = "0.2.8"
 rstest = "0.21.0"
+phf = { version = "0.11.2", features = ["macros"] }

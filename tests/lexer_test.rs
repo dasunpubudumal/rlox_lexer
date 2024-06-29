@@ -103,11 +103,23 @@ fn test_numbers() {
     );
 }
 
+#[test]
+fn test_identifier() {
+    let mut string = String::from("for");
+    string.push('\n');
+    let scanner = Scanner::new(&string);
+    let tokens = scanner.scan_tokens().tokens;
+    debug!("Tokens: {:?}", tokens);
+    assert_eq!(tokens.first().unwrap().kind, TokenType::Identifier);
+    assert_eq!(tokens.first().unwrap().lexeme, "for");
+}
+
 #[rstest]
 #[case("!*+-/=<> <= ==", 10)]
 #[case("\t >= ", 1)]
 #[case("\" Hello World!\"", 1)]
 #[case("2 + 2.1", 3)]
+#[case("for if", 2)]
 fn test_scan_tokens(#[case] input: &str, #[case] expected_len: usize) {
     let mut string = String::from(input);
     string.push('\n');

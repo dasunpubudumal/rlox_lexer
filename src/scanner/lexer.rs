@@ -151,12 +151,14 @@ impl<'a> Scanner<'a> {
         Ok(())
     }
 
-    pub(crate) fn identifier(&mut self, line: usize) {
+    pub(crate) fn identifier(&mut self, line: usize, prev_char: char) {
+        let mut id_vec: Vec<char> = vec![];
+        id_vec.push(prev_char);
         loop {
             match self.code_chars.peek().map(|&c| c) {
                 Some(val) => {
                     if self.is_alpha(&val) {
-                        self.seek();
+                        self.seek_with_add(&mut id_vec);
                     } else {
                         break;
                     }
@@ -164,10 +166,11 @@ impl<'a> Scanner<'a> {
                 _ => {}
             }
         }
+        let string = String::from_iter(id_vec.iter());
         self.tokens.push(
             TokenBuilder::new()
                 .kind(TokenType::Identifier)
-                .lexeme("".to_string())
+                .lexeme(string)
                 .line(line)
                 .literal(None)
                 .build(),
@@ -409,11 +412,10 @@ impl<'a> Scanner<'a> {
                 if self.is_digit(character) {
                     self.number(*character);
                     Ok(())
-                } else if (self.is_alpha(&character)) {
-                    self.identifier(line);
+                } else if self.is_alpha(&character) {
+                    self.identifier(line, *character);
                     Ok(())
-                }
-                else {
+                } else {
                     Err(ParserError {
                         _msg: format!(
                             "Unrecognized token: {:?} at line {} column {}",
