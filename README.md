@@ -3,7 +3,7 @@
 ![workflow](https://github.com/dasunpubudumal/rlox_lexer/actions/workflows/rust.yml/badge.svg)
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 
-Lexer writen in Rust for [Lox Language](https://craftinginterpreters.com/).
+Lexer writen in Rust for [Lox Language](https://craftinginterpreters.com/the-lox-language.html).
 
 Currently in WIP.
 
