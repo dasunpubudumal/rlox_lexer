@@ -1,6 +1,7 @@
 # rlox_lexer
 
 ![workflow](https://github.com/dasunpubudumal/rlox_lexer/actions/workflows/rust.yml/badge.svg)
+[![stability-wip](https://img.shields.io/badge/stability-wip-lightgrey.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#work-in-progress)
 
 Lexer writen in Rust for [Lox Language](https://craftinginterpreters.com/).
 
