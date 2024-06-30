@@ -1,4 +1,4 @@
-mod lexer;
+mod lexical_analysis;
 
 use log::info;
 
