@@ -1,0 +1,9 @@
+// If x is greater than 1, return x. Otherwise, return 0.
+fun main() {
+    var x = 1;
+    if (x > 1) {
+        return x;
+    } else {
+        return 0;
+    }
+}
