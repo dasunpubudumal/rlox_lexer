@@ -32,3 +32,18 @@ fn run(line: &str) -> impl Iterator<Item = Token<LiteralType>> + '_ {
     let scanner = Scanner::new(line);
     scanner.scan_tokens().tokens.into_iter()
 }
+
+#[cfg(test)]
+mod tests {
+
+    use super::*;
+
+    #[test]
+    fn test_run_file() {
+        let iterator = run_file("tests/fixtures/program_1.lox");
+        let tokens = iterator.collect::<Vec<Token<LiteralType>>>();
+        assert_eq!(tokens.first().unwrap().kind, TokenType::Fun);
+        assert_eq!(tokens.last().unwrap().kind, TokenType::RightBrace);
+        assert_eq!(tokens.len(), 28);   // This should be 27. Rust adds a [raw] type at the end of the vector; this makes it 27 + 1 = 28.
+    }
+}
