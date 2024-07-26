@@ -5,8 +5,6 @@
 
 Lexer writen in Rust for [Lox Language](https://craftinginterpreters.com/the-lox-language.html).
 
-Currently in WIP (Work in Progress).
-
 ### Notes
 
 1. Debug logs in tests: 
