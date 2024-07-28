@@ -79,7 +79,7 @@ pub struct Token<T: Debug> {
     pub lexeme: String,
     // For many tokens, this would be None, but for literals this needs to be set as its own type (e.g. `String` for strings)
     pub literal: Option<Literal<T>>,
-    // Line number of the
+    // Current line number
     pub line: usize,
 }
 
