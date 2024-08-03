@@ -1,6 +1,6 @@
 use std::vec;
 
-use crate::token::{Literal, LiteralType, TokenBuilder, TokenType};
+use rlox_lib::token::{Literal, LiteralType, TokenBuilder, TokenType};
 
 use super::Scanner;
 

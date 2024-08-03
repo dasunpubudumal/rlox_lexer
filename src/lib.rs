@@ -2,11 +2,10 @@ use std::fs;
 use std::io::stdin;
 
 use scanner::Scanner;
-pub use token::{Literal, LiteralType, Token, TokenType};
+pub use rlox_lib::token::{Literal, LiteralType, Token, TokenType};
 pub mod constants;
 mod error_handler;
 pub mod scanner;
-pub mod token;
 
 /// Run the source code file
 pub fn run_file(file_path: &str) -> impl Iterator<Item = Token<LiteralType>> + '_ {

@@ -2,7 +2,7 @@ mod lexical_analysis;
 
 use log::info;
 
-use crate::token::LiteralType;
+use rlox_lib::token::LiteralType;
 use crate::Token;
 use std::char;
 use std::iter::Peekable;

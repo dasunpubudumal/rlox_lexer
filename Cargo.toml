@@ -11,3 +11,4 @@ ctor = "0.2.8"
 rstest = "0.21.0"
 phf = { version = "0.11.2", features = ["macros"] }
 clippy = "0.0.302"
+rlox_lib = { git = "https://github.com/dasunpubudumal/rlox_lib.git" }
